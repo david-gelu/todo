@@ -2,6 +2,7 @@ import AddToDo from "@/components/shared/AddToDo";
 import styles from "./page.module.css";
 import { ToDo } from "@/components/shared/ToDo";
 import { prisma } from '@/utils/prisma'
+import { todoType } from "@/types/todoTypes";
 
 async function getData() {
   const data = await prisma.todo.findMany({
@@ -25,8 +26,8 @@ const Home = async () => {
     <main className={styles.main}>
       <AddToDo />
       <div style={{ width: '100%' }}>
-        {data.map((todo, id) => (
-          <ToDo todo={todo} key={id} />
+        {data.map((todo: todoType) => (
+          <ToDo todo={todo} key={todo.id} />
         ))}
       </div>
     </main>
