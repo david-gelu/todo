@@ -5,18 +5,24 @@ import { prisma } from '@/utils/prisma'
 import { todoType } from "@/types/todoTypes";
 
 async function getData() {
-  const data = await prisma.todo.findMany({
-    select: {
-      title: true,
-      id: true,
-      isCompleted: true,
-      createdAt: true
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  })
-  return data
+  try {
+    const data = await prisma?.todo?.findMany({
+      select: {
+        title: true,
+        id: true,
+        isCompleted: true,
+        createdAt: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+    return data
+
+  } catch (error) {
+    console.error('Error fetching todos:', error);
+  }
+
 }
 
 
@@ -26,7 +32,7 @@ const Home = async () => {
     <main className={styles.main}>
       <AddToDo />
       <div style={{ width: '100%' }}>
-        {data.map((todo: todoType) => (
+        {data?.map((todo: todoType) => (
           <ToDo todo={todo} key={todo.id} />
         ))}
       </div>
