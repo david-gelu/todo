@@ -15,7 +15,7 @@ export const DeleteToDo = (props: { todo: todoType }) => {
                 name='inputId'
                 value={todo.id}
             />
-            <Button actionButton text={<RiDeleteBin5Fill />} type='submit' />
+            <Button text={<RiDeleteBin5Fill />} type='submit' />
         </Form>
     )
 }

@@ -1,42 +1,47 @@
-import AddToDo from "@/components/shared/AddToDo";
-import styles from "./page.module.css";
-import { ToDo } from "@/components/shared/ToDo";
-import { prisma } from '@/utils/prisma'
-import { todoType } from "@/types/todoTypes";
+'use client'
 
-async function getData() {
-  try {
-    const data = await prisma?.todo?.findMany({
-      select: {
-        title: true,
-        id: true,
-        isCompleted: true,
-        createdAt: true
-      },
-      orderBy: {
-        createdAt: 'desc'
+import AddToDo from "@/components/shared/AddToDo"
+import styles from "./page.module.css"
+import { ToDo } from "@/components/shared/ToDo"
+import { todoType } from "@/types/todoTypes"
+import { useEffect, useState } from "react"
+
+const Home = () => {
+  const [dataUpdated, setDataUpdated] = useState<todoType[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('api/todos')
+        if (!response.ok) {
+          throw new Error('Failed to fetch todos')
+        }
+        const data = await response.json()
+        setDataUpdated(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
-    })
-    return data
+    }
 
-  } catch (error) {
-    console.error('Error fetching todos:', error);
-  }
+    fetchData()
 
-}
+    const interval = setInterval(fetchData, 10000)
 
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
-const Home = async () => {
-  const data = await getData()
   return (
     <main className={styles.main}>
       <AddToDo />
       <div style={{ width: '100%' }}>
-        {data?.map((todo: todoType) => (
+        {dataUpdated.map((todo) => (
           <ToDo todo={todo} key={todo.id} />
         ))}
       </div>
     </main>
-  );
+  )
 }
+
 export default Home

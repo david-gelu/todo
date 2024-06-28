@@ -13,7 +13,7 @@ const Input = (
     const { name, type, placeholder, value } = props
     return (
         <>
-            <input className=''
+            <input className='input'
                 name={name}
                 type={type}
                 value={value}

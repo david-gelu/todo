@@ -15,11 +15,9 @@ const Button = (props:
     return (
         <>
             <button
-                style={{ border: 'none', outline: 'none', backgroundColor: 'transparent', height: 'max-content', lineHeight: 0 }}
                 onClick={onClick}
                 type={type}
                 className={`${className} ${actionButton ? 'action-btn' : ''} `}
-
             >{text}</button>
         </>
     )

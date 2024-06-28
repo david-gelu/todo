@@ -17,7 +17,7 @@ export const ChangeToDo = (props: { todo: todoType }) => {
                     name='inputId'
                     value={todo.id}
                     type='hidden' />
-                <Button actionButton type='submit' text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />} />
+                <Button type='submit' text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />} />
             </Form>
         </div>
     )

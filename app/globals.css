@@ -96,3 +96,35 @@ a {
     color-scheme: dark;
   }
 }
+
+.input {
+  height: 2rem;
+  padding-inline: .5rem;
+}
+
+button {
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:has(>svg) {
+    line-height: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    height: max-content;
+
+  }
+}
+
+.action-btn {
+  background-color: #12b1e6;
+  border: 1px solid #1a1a15;
+  padding: .4rem 1rem;
+  transition: background-color 250ms ease;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #41859b;
+  }
+}
