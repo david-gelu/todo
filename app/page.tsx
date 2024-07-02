@@ -5,7 +5,6 @@ import styles from "./page.module.css"
 import { ToDo } from "@/components/shared/ToDo"
 import { todoType } from "@/types/todoTypes"
 import { useEffect, useState } from "react"
-import getTodos from "@/pages/api/todos"
 
 const Home = () => {
   const [dataUpdated, setDataUpdated] = useState<todoType[]>([])
@@ -14,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/todos')
+        const response = await fetch('/api/todos', { next: { revalidate: 600 } })
         const data = await response.json()
         setDataUpdated(data)
       } catch (error) {
@@ -24,6 +23,27 @@ const Home = () => {
     fetchData()
   }, [refresh])
 
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080')
+    ws.onopen = () => {
+      console.log('WebSocket connection established')
+    }
+    ws.onmessage = (event) => {
+      const todos = JSON.parse(event.data)
+      setDataUpdated(todos)
+    }
+    ws.onclose = () => {
+      console.log('WebSocket connection closed')
+    }
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+    }
+
+    return () => {
+      ws.close()
+    }
+  }, [])
 
   return (
     <main className={styles.main}>

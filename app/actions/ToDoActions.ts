@@ -1,6 +1,7 @@
 "use server"
 import { revalidatePath } from "next/cache"
 import { prisma } from "@/utils/prisma"
+import { notifyClients } from "@/server/websocket"
 
 export const createToDo = async (formData: FormData) => {
     const input = formData.get("input") as string
@@ -8,14 +9,12 @@ export const createToDo = async (formData: FormData) => {
 
     if (!input.trim()) return
 
-    console.time("ActionExecution");
 
     await prisma.todo.create({
         data: { title: input, price }
     })
-    console.timeEnd("ActionExecution");
+    await notifyClients()
     revalidatePath("/")
-    await fetch('api/todos', { next: { revalidate: 600 } })
 }
 
 export const changeStatus = async (formData: FormData) => {
@@ -31,7 +30,7 @@ export const changeStatus = async (formData: FormData) => {
         where: { id: inputId },
         data: { isCompleted: updatedStatus }
     })
-
+    await notifyClients()
     revalidatePath("/")
 
     return updatedStatus
@@ -45,6 +44,7 @@ export const editToDo = async (formData: FormData) => {
         where: { id: inputId },
         data: { title: newTitle }
     })
+    await notifyClients()
     revalidatePath("/")
 
 }
@@ -56,6 +56,7 @@ export const editPrice = async (formData: FormData) => {
         where: { id: inputId },
         data: { price: newPrice }
     })
+    await notifyClients()
     revalidatePath("/")
 }
 
@@ -65,5 +66,6 @@ export const deleteToDo = async (formData: FormData) => {
     await prisma.todo.delete({
         where: { id: inputId }
     })
+    await notifyClients()
     revalidatePath("/")
 }

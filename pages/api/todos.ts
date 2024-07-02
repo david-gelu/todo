@@ -1,26 +1,31 @@
 'use server'
 import { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import { notifyClients } from '@/server/websocket';
 
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	try {
-		const data = await prisma.todo.findMany({
+	if (req.method === 'GET') {
+		const todos = await prisma.todo.findMany({
 			select: {
-				id: true,
 				title: true,
+				id: true,
 				isCompleted: true,
 				price: true,
-				createdAt: true,
+				createdAt: true
 			},
 			orderBy: {
 				createdAt: 'desc',
 			},
 		});
-		res.status(200).json(data);
-	} catch (error) {
-		console.error('Error fetching todos:', error);
-		res.status(500).json({ error: 'Internal Server Error' });
+		res.json(todos);
+	} else if (req.method === 'POST') {
+		const { title, price } = req.body;
+		await prisma.todo.create({
+			data: { title, price },
+		});
+		await notifyClients()
+		res.status(201).end()
 	}
 }
