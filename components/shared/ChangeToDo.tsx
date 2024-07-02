@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import Form from '../ui/Form'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
@@ -7,17 +7,29 @@ import { todoType } from '@/types/todoTypes'
 import { IoMdCheckboxOutline } from "react-icons/io"
 import { MdCheckBoxOutlineBlank } from "react-icons/md"
 
-export const ChangeToDo = (props: { todo: todoType }) => {
-    const { todo } = props
-
+export const ChangeToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStateAction<boolean>> }) => {
+    const { todo, setRefresh } = props
+    const handleChangeStatus = async (formData: FormData) => {
+        setRefresh(true)
+        try {
+            await changeStatus(formData);
+        } catch (error) {
+            console.error('Failed to edit ToDo:', error);
+        } finally {
+            setRefresh(prev => !prev)
+        }
+    }
     return (
         <div style={{ maxWidth: 'max-content', display: 'flex', alignItems: 'center' }}>
-            <Form action={changeStatus}>
+            <Form action={handleChangeStatus}>
                 <Input
                     name='inputId'
                     value={todo.id}
                     type='hidden' />
-                <Button type='submit' text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />} />
+                <Button type='submit'
+                    text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />}
+                    onClick={() => setRefresh(prev => !prev)}
+                />
             </Form>
         </div>
     )

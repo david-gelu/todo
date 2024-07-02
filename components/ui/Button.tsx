@@ -8,9 +8,10 @@ const Button = (props:
         className?: string
         onClick?: () => void,
         actionButton?: boolean
+        disabled?: boolean
     }) => {
 
-    const { type, text, className, onClick, actionButton } = props
+    const { type, text, className, onClick, actionButton, disabled } = props
 
     return (
         <>
@@ -18,6 +19,7 @@ const Button = (props:
                 onClick={onClick}
                 type={type}
                 className={`${className} ${actionButton ? 'action-btn' : ''} `}
+                disabled={disabled}
             >{text}</button>
         </>
     )

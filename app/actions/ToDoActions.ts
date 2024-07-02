@@ -8,11 +8,14 @@ export const createToDo = async (formData: FormData) => {
 
     if (!input.trim()) return
 
+    console.time("ActionExecution");
+
     await prisma.todo.create({
         data: { title: input, price }
     })
-
+    console.timeEnd("ActionExecution");
     revalidatePath("/")
+    await fetch('api/todos', { next: { revalidate: 600 } })
 }
 
 export const changeStatus = async (formData: FormData) => {
@@ -43,6 +46,7 @@ export const editToDo = async (formData: FormData) => {
         data: { title: newTitle }
     })
     revalidatePath("/")
+
 }
 export const editPrice = async (formData: FormData) => {
     const newPrice = formData.get('newPrice') as string

@@ -17,11 +17,22 @@ const Form = ({
     onSubmit,
 }: FormProps) => {
     const ref = useRef<HTMLFormElement>(null);
+    const handleSubmit = async (event: any) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        try {
+            await action(formData);
+            ref.current?.reset();
+        } catch (error) {
+            console.error('Error performing action:', error);
+        }
+    };
     return (
         <form
-            style={{ lineHeight: 0, cursor: "pointer" }}
+            style={{ lineHeight: 0, cursor: "pointer", width: '100%' }}
             className={className}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
             ref={ref}
             action={async (formData) => {
                 await action(formData);

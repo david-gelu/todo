@@ -99,6 +99,7 @@ a {
 
 .input {
   height: 2rem;
+  width: 100%;
   padding-inline: .5rem;
 }
 
@@ -115,6 +116,12 @@ button {
     height: max-content;
 
   }
+
+  &>svg {
+    height: 2rem;
+    width: 2rem;
+    padding: 0.5rem;
+  }
 }
 
 .action-btn {
@@ -127,4 +134,21 @@ button {
     cursor: pointer;
     background-color: #41859b;
   }
+}
+
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+}
+
+.add-todo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1rem;
+}
+
+.m-width {
+  max-width: max-content;
 }

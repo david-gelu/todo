@@ -1,27 +1,26 @@
-// pages/api/todos.ts
+'use server'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
 
-import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/utils/prisma'
+const prisma = new PrismaClient();
 
-const getTodos = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	try {
-		const todos = await prisma.todo.findMany({
+		const data = await prisma.todo.findMany({
 			select: {
-				title: true,
 				id: true,
+				title: true,
 				isCompleted: true,
-				createdAt: true,
 				price: true,
+				createdAt: true,
 			},
 			orderBy: {
 				createdAt: 'desc',
 			},
-		})
-		res.status(200).json(todos)
+		});
+		res.status(200).json(data);
 	} catch (error) {
-		console.error('Error fetching todos:', error)
-		res.status(500).json({ error: 'Error fetching todos' })
+		console.error('Error fetching todos:', error);
+		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
-
-export default getTodos

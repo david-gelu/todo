@@ -5,39 +5,32 @@ import styles from "./page.module.css"
 import { ToDo } from "@/components/shared/ToDo"
 import { todoType } from "@/types/todoTypes"
 import { useEffect, useState } from "react"
+import getTodos from "@/pages/api/todos"
 
 const Home = () => {
   const [dataUpdated, setDataUpdated] = useState<todoType[]>([])
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('api/todos')
-        if (!response.ok) {
-          throw new Error('Failed to fetch todos')
-        }
+        const response = await fetch('/api/todos')
         const data = await response.json()
         setDataUpdated(data)
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching todos:', error)
       }
     }
-
     fetchData()
+  }, [refresh])
 
-    const interval = setInterval(fetchData, 10000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
 
   return (
     <main className={styles.main}>
-      <AddToDo />
-      <div style={{ width: '100%' }}>
+      <AddToDo setRefresh={setRefresh} />
+      <div style={{ width: '100%' }} className="todo-container">
         {dataUpdated.map((todo) => (
-          <ToDo todo={todo} key={todo.id} />
+          <ToDo setRefresh={setRefresh} todo={todo} key={todo.id} />
         ))}
       </div>
     </main>
