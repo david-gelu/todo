@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/todos', { next: { revalidate: 600 } })
+        const response = await fetch('/api/todos', { cache: 'no-store' })
         const data = await response.json()
         setDataUpdated(data)
       } catch (error) {

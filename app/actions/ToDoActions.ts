@@ -14,7 +14,9 @@ export const createToDo = async (formData: FormData) => {
         data: { title: input, price }
     })
     await notifyClients()
-    revalidatePath("/")
+    revalidatePath('/', 'layout')
+
+
 }
 
 export const changeStatus = async (formData: FormData) => {
@@ -31,7 +33,8 @@ export const changeStatus = async (formData: FormData) => {
         data: { isCompleted: updatedStatus }
     })
     await notifyClients()
-    revalidatePath("/")
+    revalidatePath('/', 'layout')
+
 
     return updatedStatus
 }
@@ -45,7 +48,8 @@ export const editToDo = async (formData: FormData) => {
         data: { title: newTitle }
     })
     await notifyClients()
-    revalidatePath("/")
+    revalidatePath('/', 'layout')
+
 
 }
 export const editPrice = async (formData: FormData) => {
@@ -57,7 +61,8 @@ export const editPrice = async (formData: FormData) => {
         data: { price: newPrice }
     })
     await notifyClients()
-    revalidatePath("/")
+    revalidatePath('/', 'layout')
+
 }
 
 export const deleteToDo = async (formData: FormData) => {
@@ -67,5 +72,6 @@ export const deleteToDo = async (formData: FormData) => {
         where: { id: inputId }
     })
     await notifyClients()
-    revalidatePath("/")
+    revalidatePath('/', 'layout')
+
 }
