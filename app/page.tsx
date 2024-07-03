@@ -4,7 +4,7 @@ import AddToDo from "@/components/shared/AddToDo"
 import styles from "./page.module.css"
 import { ToDo } from "@/components/shared/ToDo"
 import { todoType } from "@/types/todoTypes"
-import { useEffect, useState, useRef, useLayoutEffect } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 
 const Home = () => {
   const [dataUpdated, setDataUpdated] = useState<todoType[]>([])
@@ -28,18 +28,34 @@ const Home = () => {
     fetchData()
   }, [refresh, search])
 
-  useEffect(() => {
-    if (elementRef.current) {
-      const elem = document.querySelector(':root') as HTMLElement
-      elem.style.setProperty('--height', `${elementRef.current.clientHeight}px`)
-    }
+  // useEffect(() => {
+  //   if (elementRef.current) {
+  //     const elem = document.querySelector(':root') as HTMLElement
+  //     elem.style.setProperty('--height', `${elementRef.current.clientHeight}px`)
+  //   }
+  // }, []);
+
+  const [height, setHeight] = useState(0);
+
+  const onResize = useCallback(() => {
+    if (elementRef.current) setHeight(elementRef.current.clientHeight);
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    onResize()
+    const elem = document.querySelector(':root') as HTMLElement
+    console.log(height)
+    elem.style.setProperty('--height', `${height}px`)
+    return () => {
+      window.removeEventListener("resize", onResize)
+    }
+  }, [height])
 
   return (
     <main className={styles.main}>
-      <div ref={elementRef}>
-        <div style={{ marginBottom: '1.5rem', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="header-container" ref={elementRef}>
+        <div className="title-and-search">
           <h1>Add todo app</h1> <input className='input' onChange={(e) => setSearch(e.target.value)} placeholder="Search todos by name or price" style={{ minWidth: '16rem', maxWidth: '20rem', margin: '0.5rem 0 0.5rem auto' }} />
         </div>
         <AddToDo setRefresh={setRefresh} />

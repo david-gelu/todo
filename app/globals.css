@@ -97,10 +97,26 @@ a {
   }
 }
 
+.header-container {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  box-shadow: 0px 4px 3px -3px #000;
+}
+
+.title-and-search {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .input {
   height: 2rem;
   width: 100%;
-  padding-inline: .5rem;
+  padding-inline: 0.5rem;
   border-radius: 1rem;
 }
 
