@@ -101,14 +101,18 @@ a {
   height: 2rem;
   width: 100%;
   padding-inline: .5rem;
+  border-radius: 1rem;
 }
 
 button {
+  border-radius: 1rem;
+
   &:hover {
     cursor: pointer;
   }
 
   &:has(>svg) {
+    border-radius: 0;
     line-height: 0;
     border: none;
     outline: none;
@@ -140,17 +144,41 @@ button {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 90dvh;
+  max-height: 80dvh;
   overflow-y: auto;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.5rem 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .add-todo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: 1rem;
 }
 
 .m-width {
   max-width: max-content;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+  background-color: #CCCCCC;
+  border-radius: .75rem;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  background-color: #F5F5F5;
+  border-radius: .75rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: .75rem;
+  background-color: #FFF;
+  background-image: -webkit-linear-gradient(270deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 25%,
+      transparent 100%,
+      rgba(0, 0, 0, 1) 75%,
+      transparent)
 }

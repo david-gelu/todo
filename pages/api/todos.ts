@@ -1,7 +1,6 @@
 'use server'
 import { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
-import { notifyClients } from '@/server/websocket';
 
 const prisma = new PrismaClient();
 
@@ -15,9 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				price: true,
 				createdAt: true
 			},
-			orderBy: {
-				createdAt: 'desc',
-			},
+			orderBy: [
+				{ isCompleted: 'asc' },
+				{ createdAt: 'desc' },
+			],
 		});
 		res.json(todos);
 	} else if (req.method === 'POST') {
@@ -25,7 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		await prisma.todo.create({
 			data: { title, price },
 		});
-		await notifyClients()
 		res.status(201).end()
 	}
 }
