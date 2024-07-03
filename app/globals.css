@@ -106,11 +106,9 @@ a {
 
 .title-and-search {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .input {
@@ -173,7 +171,7 @@ button {
 }
 
 .m-width {
-  max-width: max-content;
+  /* max-width: max-content; */
 }
 
 *::-webkit-scrollbar-track {

@@ -56,7 +56,7 @@ const Home = () => {
     <main className={styles.main}>
       <div className="header-container" ref={elementRef}>
         <div className="title-and-search">
-          <h1>Add todo app</h1> <input className='input' onChange={(e) => setSearch(e.target.value)} placeholder="Search todos by name or price" style={{ minWidth: '16rem', maxWidth: '20rem', margin: '0.5rem 0 0.5rem auto' }} />
+          <h1>Add todo app</h1> <input className='input' onChange={(e) => setSearch(e.target.value)} placeholder="Search todos by name or price" style={{ margin: '0.5rem 0 0.5rem auto' }} />
         </div>
         <AddToDo setRefresh={setRefresh} />
       </div>
