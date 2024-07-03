@@ -17,7 +17,7 @@ const Home = () => {
         const response = await fetch('/api/todos', { cache: 'no-store' })
         const data = await response.json()
         setDataUpdated(data.filter((d: todoType) =>
-          d.title?.toLowerCase().includes(search) || d.price?.toLowerCase().includes(search)
+          d.title?.toLowerCase().includes(search.toLowerCase()) || d.price?.toLowerCase().includes(search.toLowerCase())
         ))
       } catch (error) {
         console.error('Error fetching todos:', error)
