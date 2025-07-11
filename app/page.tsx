@@ -103,7 +103,7 @@ const Home = () => {
           <input
             className='input'
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search todos by name"
+            placeholder="Cauta dupa nume"
             style={{ margin: '0.5rem 0 0.5rem auto' }}
           />
         </div>
