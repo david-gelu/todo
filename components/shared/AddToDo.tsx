@@ -24,14 +24,12 @@ const AddToDo = ({ setRefresh }: { setRefresh: Dispatch<SetStateAction<boolean>>
 		<Form action={handleCreateToDo} className='change-latter'>
 			<div className='add-todo'>
 				<Input name='input' type='text' placeholder='Add todo...' />
-				<Input name='price' type='text' placeholder='Add price...' />
 				<Button
 					className='m-width'
 					type='submit'
 					text={`${loading ? 'Sending...' : 'Add'}`}
 					actionButton
 					disabled={loading}
-
 				/>
 			</div>
 		</Form>

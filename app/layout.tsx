@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/_next/static/css/app/page.css" as="style" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

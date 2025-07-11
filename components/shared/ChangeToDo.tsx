@@ -10,6 +10,7 @@ import { MdCheckBoxOutlineBlank } from "react-icons/md"
 export const ChangeToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStateAction<boolean>> }) => {
     const { todo, setRefresh } = props
     const handleChangeStatus = async (formData: FormData) => {
+        console.log('Changing status for ToDo:', todo.id);
         setRefresh(true)
         try {
             await changeStatus(formData);
@@ -26,9 +27,9 @@ export const ChangeToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStat
                     name='inputId'
                     value={todo.id}
                     type='hidden' />
-                <Button type='submit'
+                <Button
+                    type='submit'
                     text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />}
-                    onClick={() => setRefresh(prev => !prev)}
                 />
             </Form>
         </div>
