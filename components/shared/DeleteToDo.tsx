@@ -26,7 +26,7 @@ export const DeleteToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStat
 					name='inputId'
 					value={todo.id}
 				/>
-				<Button text={<RiDeleteBin5Fill />} type='submit' onClick={() => setRefresh(prev => !prev)} />
+				<Button text={<RiDeleteBin5Fill className="todo-icon" />} type='submit' onClick={() => setRefresh(prev => !prev)} />
 			</Form>
 		</div>
 	)

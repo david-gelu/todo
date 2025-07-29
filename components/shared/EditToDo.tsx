@@ -36,13 +36,13 @@ export const EditToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStateA
           <Input name='inputId' type='hidden' value={todo.id} />
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', }}>
             <Input name='newTitle' type="text" placeholder='Edit ToDo ...' />
-            <Button type='submit' text={<FaSave />} onClick={() => setRefresh(prev => !prev)} />
+            <Button type='submit' text={<FaSave className="todo-icon" />} onClick={() => setRefresh(prev => !prev)} />
           </div>
         </Form> : <></>
       }
       <Button
         onClick={handleEdit}
-        text={!editTodo ? <FaEdit /> : <FaUndo />}
+        text={!editTodo ? <FaEdit className="todo-icon" /> : <FaUndo className="todo-icon" />}
       />
     </div >
   )

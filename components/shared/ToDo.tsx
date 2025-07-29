@@ -13,21 +13,18 @@ export const ToDo = (props: {
     const { todo, setRefresh } = props
 
     return (
-        <>
-            <div style={{
-                display: 'flex', alignItems: 'center', gap: '1rem', color: todo.isCompleted ? 'green' : 'red', borderRadius: '1rem'
-                , boxShadow: ' 0px 0px 3px #000', padding: '0.5rem', height: '100%'
-            }}>
-                <ChangeToDo setRefresh={setRefresh} todo={todo} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.5rem', fontWeight: 'bold', flexBasis: '100%' }}>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.5rem', fontWeight: 'bold', flexBasis: '100%' }}>
-                        <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'space-between', gap: '.5rem', textAlign: 'start' }}>{todo.title} <EditToDo setRefresh={setRefresh} todo={todo} /></div>
-                    </div>
-                    <div style={{ fontSize: '.5rem' }}>{moment(todo.createdAt).locale('ro').format('L')}</div>
+        <div
+            className={`todo-item ${todo.isCompleted ? 'todo-completed' : 'todo-incomplete'}`}
+        >
+            <ChangeToDo setRefresh={setRefresh} todo={todo} />
+            <div className="todo-content">
+                <div className="todo-title-date">
+                    <div className="todo-title">{todo.title}</div>
+                    <div className="todo-date">{moment(todo.createdAt).locale('ro').format('L')}</div>
                 </div>
-                <DeleteToDo setRefresh={setRefresh} todo={todo} />
+                <EditToDo setRefresh={setRefresh} todo={todo} />
             </div>
-        </>
+            <DeleteToDo setRefresh={setRefresh} todo={todo} />
+        </div>
     )
 }

@@ -1,18 +1,23 @@
 'use server'
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/utils/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		if (req.method === 'GET') {
+			const search = (req.query.search as string) || '';
 			const todos = await prisma.todo.findMany({
+				where: {
+					title: {
+						contains: search,
+						mode: 'insensitive',
+					},
+				},
 				select: {
 					title: true,
 					id: true,
 					isCompleted: true,
-					createdAt: true
+					createdAt: true,
 				},
 				orderBy: [
 					{ isCompleted: 'asc' },
@@ -23,10 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		} else if (req.method === 'POST') {
 			const { title } = req.body;
 			await prisma.todo.create({
-				data: {
-					title,
-					createdAt: new Date(),
-				},
+				data: { title },
 			});
 			res.status(201).end();
 		} else {

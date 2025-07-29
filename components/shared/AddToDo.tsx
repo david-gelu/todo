@@ -4,7 +4,7 @@ import Form from '../ui/Form'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import { createToDo } from '@/app/actions/ToDoActions'
-import { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 
 const AddToDo = ({ setRefresh }: { setRefresh: Dispatch<SetStateAction<boolean>> }) => {
 	const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const AddToDo = ({ setRefresh }: { setRefresh: Dispatch<SetStateAction<boolean>>
 			<div className='add-todo'>
 				<Input name='input' type='text' placeholder='Adauga produs...' />
 				<Button
-					className='m-width'
+					className='m-width-'
 					type='submit'
 					text={`${loading ? 'Se adauga...' : 'Adauga'}`}
 					actionButton

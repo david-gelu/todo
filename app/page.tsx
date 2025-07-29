@@ -6,6 +6,7 @@ import { ToDo } from "@/components/shared/ToDo"
 import { todoType } from "@/types/todoTypes"
 import { useEffect, useState, useRef, useCallback } from "react"
 import { Accordion } from "@/components/shared/Accordion"
+import ThemeColor from "@/components/shared/ThemeColor"
 
 function groupByDate(todos: todoType[]) {
   return todos.reduce((acc, todo) => {
@@ -25,30 +26,42 @@ const Home = () => {
   const [dataUpdated, setDataUpdated] = useState<todoType[]>([])
   const [refresh, setRefresh] = useState(false)
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true) // loader state
+  const [initialLoading, setInitialLoading] = useState(true)
 
   const elementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const darkMode = localStorage.getItem('dark-mode')
+    if (darkMode === 'enabled' || (darkMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light')
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+    setLoading(false)
     const fetchData = async () => {
+      timeout = setTimeout(() => setLoading(true), 2000)
       try {
-        const response = await fetch('/api/todos', { cache: 'no-store' })
+        const response = await fetch(`/api/todos?search=${encodeURIComponent(search)}`)
         const data = await response.json()
-        setDataUpdated(data.filter((d: todoType) =>
-          d.title?.toLowerCase().includes(search.toLowerCase())
-        ))
+        setDataUpdated(data)
       } catch (error) {
         console.error('Error fetching todos:', error)
+      } finally {
+        clearTimeout(timeout)
+        setLoading(false)
+        setInitialLoading(false)
       }
     }
     fetchData()
+    return () => clearTimeout(timeout)
   }, [refresh, search])
-
-  // useEffect(() => {
-  //   if (elementRef.current) {
-  //     const elem = document.querySelector(':root') as HTMLElement
-  //     elem.style.setProperty('--height', `${elementRef.current.clientHeight}px`)
-  //   }
-  // }, [])
 
   const [height, setHeight] = useState(0)
 
@@ -65,6 +78,7 @@ const Home = () => {
       window.removeEventListener("resize", onResize)
     }
   }, [height])
+
 
   const sortedTodos = [...dataUpdated].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -96,44 +110,54 @@ const Home = () => {
   }
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} main`}>
       <div className="header-container" ref={elementRef}>
         <div className="title-and-search">
           <h1>Lista cumparaturi</h1>
-          <input
-            className='input'
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cauta dupa nume"
-            style={{ margin: '0.5rem 0 0.5rem auto' }}
-          />
+          <ThemeColor />
         </div>
         <AddToDo setRefresh={setRefresh} />
+        <div style={{ display: 'flex', width: '100%' }}>
+          <input
+            name="search"
+            className="input"
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cauta dupa nume"
+            style={{ margin: '0.5rem 0 0.5rem auto', width: '45%', marginLeft: 'auto' }}
+          />
+        </div>
       </div>
-      <div style={{ width: '100%' }} className="todo-container">
-        {Object.entries(groupedTodos).map(([date, todos]) => (
-          <details
-            key={date}
-            open={openGroups[date]}
-            style={{ marginBottom: '1rem', border: '1px solid #ccc', borderRadius: 4, padding: 8 }}
-          >
-            <summary style={{ fontWeight: 'bold', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              {date}
-              <span
-                style={{ cursor: 'pointer', marginLeft: 8 }}
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  handleToggle(date)
-                }}
-              >
-                {openGroups[date] ? "▲" : "▼"}
-              </span>
-            </summary>
-            {todos.map(todo => (
-              <ToDo key={todo.id} setRefresh={setRefresh} todo={todo} />
-            ))}
-          </details>
-        ))}
+      <div className="todo-container">
+        {initialLoading || loading ? (
+          <div className="loader">Se încarcă...</div>
+        ) : (
+          Object.entries(groupedTodos).map(([date, todos]) => (
+            <details
+              key={date}
+              open={openGroups[date]}
+              className="details-accordion"
+            >
+              <summary className="details-summary">
+                {date}
+                <span
+                  className="details-arrow"
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleToggle(date)
+                  }}
+                >
+                  {openGroups[date] ? "▲" : "▼"}
+                </span>
+              </summary>
+              <div className="todo-accordion-body">
+                {todos.map(todo => (
+                  <ToDo key={todo.id} setRefresh={setRefresh} todo={todo} />
+                ))}
+              </div>
+            </details>
+          ))
+        )}
       </div>
     </main>
   )

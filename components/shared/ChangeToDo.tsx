@@ -29,7 +29,11 @@ export const ChangeToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStat
                     type='hidden' />
                 <Button
                     type='submit'
-                    text={todo.isCompleted ? <IoMdCheckboxOutline /> : <MdCheckBoxOutlineBlank />}
+                    text={
+                        todo.isCompleted
+                            ? <IoMdCheckboxOutline className="todo-icon" />
+                            : <MdCheckBoxOutlineBlank className="todo-icon" />
+                    }
                 />
             </Form>
         </div>
