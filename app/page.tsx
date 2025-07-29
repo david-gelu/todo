@@ -79,10 +79,17 @@ const Home = () => {
     }
   }, [height])
 
+  const [sortType, setSortType] = useState<'date' | 'incomplete'>('date');
 
-  const sortedTodos = [...dataUpdated].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  )
+  const sortedTodos = [...dataUpdated].sort((a, b) => {
+    if (sortType === 'date') {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+    if (a.isCompleted !== b.isCompleted) {
+      return a.isCompleted ? 1 : -1;
+    }
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   const groupedTodos = groupByDate(sortedTodos)
 
@@ -117,13 +124,28 @@ const Home = () => {
           <ThemeColor />
         </div>
         <AddToDo setRefresh={setRefresh} />
-        <div style={{ display: 'flex', width: '100%' }}>
+        <div style={{ display: 'flex', width: '100%', gap: '1rem', alignItems: 'flex-end' }}>
+          <form style={{ margin: '0.5rem 0 0.5rem auto' }} >
+            <label htmlFor="sort">Sortare dupa: </label>
+
+            <select
+              name='sort'
+              className="input"
+              style={{ width: 'auto', minWidth: 120 }}
+              value={sortType}
+              onChange={e => setSortType(e.target.value as 'date' | 'incomplete')}
+            >
+              <option value="date">Data</option>
+              <option value="incomplete">Incomplete</option>
+            </select>
+
+          </form>
           <input
             name="search"
             className="input"
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cauta dupa nume"
-            style={{ margin: '0.5rem 0 0.5rem auto', width: '45%', marginLeft: 'auto' }}
+            style={{ margin: '0.5rem 0 0.5rem auto' }}
           />
         </div>
       </div>
