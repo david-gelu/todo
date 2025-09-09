@@ -1,13 +1,22 @@
-// /pages/api/todos.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/utils/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	try {
-		if (req.method === 'GET') {
-			const search = (req.query.search as string) || ''
-			const skip = parseInt(req.query.skip as string) || 0
-			const take = parseInt(req.query.take as string) || 20
+	if (req.method === 'GET') {
+		try {
+			const page = Math.max(1, Number(req.query.page) || 1);
+			const limit = Math.max(1, Number(req.query.limit) || 40);
+			const search = (req.query.search as string) || '';
+			const skip = (page - 1) * limit;
+
+			const totalItems = await prisma.todo.count({
+				where: {
+					title: {
+						contains: search,
+						mode: 'insensitive',
+					},
+				},
+			});
 
 			const todos = await prisma.todo.findMany({
 				where: {
@@ -16,32 +25,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						mode: 'insensitive',
 					},
 				},
-				select: {
-					title: true,
-					id: true,
-					isCompleted: true,
-					createdAt: true,
+				take: limit,
+				skip: skip,
+				orderBy: {
+					createdAt: 'desc',
 				},
-				orderBy: [
-					{ isCompleted: 'asc' },
-					{ createdAt: 'desc' },
-				],
-				skip,
-				take,
-			})
+			});
 
-			res.status(200).json(todos)
-		} else if (req.method === 'POST') {
-			const { title } = req.body
-			await prisma.todo.create({
-				data: { title },
-			})
-			res.status(201).end()
-		} else {
-			res.status(405).json({ error: 'Method not allowed' })
+			const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+
+			return res.json({
+				todos,
+				totalPages,
+				currentPage: page,
+				totalItems,
+			});
+
+		} catch (error) {
+			console.error('Error fetching todos:', error);
+			return res.status(500).json({ error: 'Failed to fetch todos' });
 		}
-	} catch (error) {
-		console.error(error)
-		res.status(500).json({ error: 'Internal server error' })
+	} else if (req.method === 'POST') {
+		const { title } = req.body
+		await prisma.todo.create({
+			data: { title },
+		})
+		res.status(201).end()
+	} else {
+		res.status(405).json({ error: 'Method not allowed' })
 	}
 }

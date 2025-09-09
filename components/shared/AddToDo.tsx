@@ -3,24 +3,24 @@
 import Form from '../ui/Form'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
-import { createToDo } from '@/app/actions/ToDoActions'
-import { useState, useRef, Dispatch, SetStateAction } from 'react'
+import { useAddTodo } from '@/hooks/useTodos'
+import { useRef } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
-const AddToDo = ({ setRefresh }: { setRefresh: Dispatch<SetStateAction<boolean>> }) => {
-	const [loading, setLoading] = useState(false)
+const AddToDo = () => {
 	const formRef = useRef<HTMLFormElement>(null)
+	const queryClient = useQueryClient();
+	const addTodoMutation = useAddTodo()
 
 	const handleCreateToDo = async (formData: FormData) => {
-		setLoading(true)
 		try {
-			await createToDo(formData)
+			await addTodoMutation.mutateAsync(formData)
 			formRef.current?.reset()
 		} catch (error) {
 			console.error('Failed to create ToDo:', error)
 		} finally {
-			setLoading(false)
+			queryClient.invalidateQueries({ queryKey: ['todos'] })
 		}
-		setRefresh(prev => !prev)
 	}
 
 	return (
@@ -30,9 +30,9 @@ const AddToDo = ({ setRefresh }: { setRefresh: Dispatch<SetStateAction<boolean>>
 				<Button
 					className='m-width-'
 					type='submit'
-					text={`${loading ? 'Se adauga...' : 'Adauga'}`}
+					text={addTodoMutation.isPending ? 'Se adaugă...' : 'Adaugă'}
 					actionButton
-					disabled={loading}
+					disabled={addTodoMutation.isPending}
 				/>
 			</div>
 		</Form>

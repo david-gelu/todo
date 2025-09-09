@@ -3,22 +3,25 @@ import { todoType } from '@/types/todoTypes'
 import Form from '../ui/Form'
 import Input from '../ui/Input'
 import Button from '../ui/Button'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { editToDo } from '@/app/actions/ToDoActions'
 import { FaSave, FaEdit, FaUndo } from "react-icons/fa";
+import { useQueryClient } from '@tanstack/react-query'
 
-export const EditToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStateAction<boolean>> }) => {
-  const { todo, setRefresh } = props
+export const EditToDo = (props: { todo: todoType }) => {
+  const { todo } = props
   const [editTodo, setEditTodo] = useState(false)
-
+  const queryClient = useQueryClient();
   const handleEditToDo = async (formData: FormData) => {
     try {
       await editToDo(formData);
     } catch (error) {
       console.error('Failed to edit ToDo:', error);
-    } finally {
-      setRefresh(prev => !prev)
     }
+    finally {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    }
+
   }
 
   const handleEdit = () => {
@@ -36,7 +39,7 @@ export const EditToDo = (props: { todo: todoType, setRefresh: Dispatch<SetStateA
           <Input name='inputId' type='hidden' value={todo.id} />
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', }}>
             <Input name='newTitle' type="text" placeholder='Edit ToDo ...' />
-            <Button type='submit' text={<FaSave className="todo-icon" />} onClick={() => setRefresh(prev => !prev)} />
+            <Button type='submit' text={<FaSave className="todo-icon" />} />
           </div>
         </Form> : <></>
       }
