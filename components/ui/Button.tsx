@@ -9,6 +9,7 @@ const Button = (props:
         onClick?: () => void,
         actionButton?: boolean
         disabled?: boolean
+        style?: React.CSSProperties
     }) => {
 
     const { type, text, className, onClick, actionButton, disabled } = props

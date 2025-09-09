@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 
 interface FormProps {
     children: ReactNode;
@@ -9,24 +9,25 @@ interface FormProps {
     onSubmit?: () => void;
 }
 
-const Form = ({
-    children,
-    action,
-    className,
-    onSubmit,
-}: FormProps) => {
-    return (
-        <form
-            style={{ lineHeight: 0, cursor: "pointer", width: '100%' }}
-            className={className}
-            onSubmit={e => {
-                e.preventDefault();
-                action(new FormData(e.target as HTMLFormElement));
-            }}
-        >
-            {children}
-        </form>
-    );
-};
+const Form = forwardRef<HTMLFormElement, FormProps>(
+    ({ children, action, className, onSubmit }, ref) => {
+        return (
+            <form
+                ref={ref}
+                style={{ lineHeight: 0, cursor: "pointer", width: "100%" }}
+                className={className}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    action(new FormData(e.currentTarget));
+                    onSubmit?.();
+                }}
+            >
+                {children}
+            </form>
+        );
+    }
+);
+
+Form.displayName = "Form"; // necesar pentru forwardRef
 
 export default Form;
