@@ -46,11 +46,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(500).json({ error: 'Failed to fetch todos' });
 		}
 	} else if (req.method === 'POST') {
-		const { title } = req.body
-		await prisma.todo.create({
-			data: { title },
-		})
-		res.status(201).end()
+		try {
+			const { title } = req.body
+
+			if (!title?.trim()) {
+				return res.status(400).json({ error: 'Title is required' })
+			}
+
+			const todo = await prisma.todo.create({
+				data: { title: title.trim() },
+			})
+
+			return res.status(201).json(todo)
+		} catch (error) {
+			console.error('Failed to create todo:', error)
+			return res.status(500).json({ error: 'Failed to create todo' })
+		}
 	} else {
 		res.status(405).json({ error: 'Method not allowed' })
 	}

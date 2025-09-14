@@ -162,7 +162,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: calc(60dvh - var(--height));
+  max-height: calc(80dvh - var(--height));
   overflow-y: auto;
   padding: 0.5rem 0.5rem 1.5rem;
 }
@@ -330,4 +330,11 @@ body {
 .pagination-button.active {
   background: var(--color-primary);
   border-color: var(--color-primary);
+}
+
+.pagination-ellipsis {
+  padding: 0 0.5rem;
+  color: var(--color-text);
+  align-self: flex-end;
+  margin-bottom: 0.5rem;
 }

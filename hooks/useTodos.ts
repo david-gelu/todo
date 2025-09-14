@@ -31,16 +31,26 @@ export const useAddTodo = () => {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const title = formData.get('input');
+      const title = formData.get('input')?.toString().trim();
+
+      if (!title) {
+        throw new Error('Title is required');
+      }
+
       const response = await fetch('/api/todos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ title }),
       });
 
-      if (!response.ok) throw new Error('Failed to add todo');
+      if (!response.ok) {
+        throw new Error('Failed to create todo');
+      }
 
-      return response.json();
+      const data = await response.json();
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });

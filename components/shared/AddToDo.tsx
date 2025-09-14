@@ -1,38 +1,52 @@
 'use client'
 
+import { useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useAddTodo } from '@/hooks/useTodos'
 import Form from '../ui/Form'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
-import { useAddTodo } from '@/hooks/useTodos'
-import { useRef } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 
 const AddToDo = () => {
 	const formRef = useRef<HTMLFormElement>(null)
-	const queryClient = useQueryClient();
+	const inputRef = useRef<HTMLInputElement>(null)
+	const [inputValue, setInputValue] = useState('')
 	const addTodoMutation = useAddTodo()
 
 	const handleCreateToDo = async (formData: FormData) => {
 		try {
+			if (!inputValue.trim()) {
+				return
+			}
+
 			await addTodoMutation.mutateAsync(formData)
+
+			setInputValue('')
 			formRef.current?.reset()
+			inputRef.current?.focus()
 		} catch (error) {
 			console.error('Failed to create ToDo:', error)
-		} finally {
-			queryClient.invalidateQueries({ queryKey: ['todos'] })
 		}
 	}
 
 	return (
 		<Form ref={formRef} action={handleCreateToDo} className='change-latter'>
 			<div className='add-todo'>
-				<Input name='input' type='text' placeholder='Adauga produs...' />
+				<Input
+					ref={inputRef}
+					name='input'
+					type='text'
+					value={inputValue}
+					onChange={(e) => setInputValue(e.target.value)}
+					placeholder='Adauga produs...'
+					required
+				/>
 				<Button
 					className='m-width-'
 					type='submit'
 					text={addTodoMutation.isPending ? 'Se adaugă...' : 'Adaugă'}
 					actionButton
-					disabled={addTodoMutation.isPending}
+					disabled={addTodoMutation.isPending || !inputValue.trim()}
 				/>
 			</div>
 		</Form>

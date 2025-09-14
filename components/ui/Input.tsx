@@ -1,27 +1,15 @@
 "use client"
 
-import React from 'react'
+import { forwardRef, InputHTMLAttributes } from 'react'
 
-const Input = (
-    props: {
-        name?: string,
-        type?: string,
-        placeholder?: string,
-        value?: string
-    }) => {
-
-    const { name, type, placeholder, value } = props
-    return (
-        <>
-            <input className='input'
-                name={name}
-                type={type}
-                value={value}
-                placeholder={placeholder}
-                autoComplete='off'
-            />
-        </>
-    )
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    name: string
 }
+
+const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+    return <input ref={ref} {...props} className={`input ${props.className || ''}`} />
+})
+
+Input.displayName = 'Input'
 
 export default Input

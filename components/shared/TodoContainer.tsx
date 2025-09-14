@@ -79,6 +79,17 @@ export const TodoContainer = ({
   const renderPagination = () => {
     if (!data?.totalPages) return null;
 
+    const getVisiblePages = (current: number, total: number) => {
+      if (total <= 3) return Array.from({ length: total }, (_, i) => i + 1);
+
+      if (current <= 2) return [1, 2, 3];
+      if (current >= total - 1) return [total - 2, total - 1, total];
+
+      return [current - 1, current, current + 1];
+    };
+
+    const visiblePages = getVisiblePages(currentPage, data.totalPages);
+
     return (
       <div className="pagination">
         <button
@@ -89,29 +100,50 @@ export const TodoContainer = ({
           Previous
         </button>
 
-        {[...Array(data.totalPages)].map((_, i) => {
-          const pageNumber = i + 1;
-          return (
+        {currentPage > 2 && (
+          <>
             <button
-              key={pageNumber}
-              onClick={() => setCurrentPage(pageNumber)}
-              onMouseEnter={() => {
-                if (pageNumber !== currentPage) {
-                  queryClient.prefetchQuery({
-                    queryKey: ['todos', search, pageNumber],
-                    queryFn: () =>
-                      fetch(`/api/todos?search=${encodeURIComponent(search)}&page=${pageNumber}&limit=40`)
-                        .then(res => res.json())
-                  });
-                }
-              }}
-              className={`pagination-button ${pageNumber === currentPage ? 'active' : ''}`}
-              disabled={pageNumber === currentPage}
+              onClick={() => setCurrentPage(1)}
+              className="pagination-button"
             >
-              {pageNumber}
+              1
             </button>
-          );
-        })}
+            {currentPage > 3 && <span className="pagination-ellipsis">...</span>}
+          </>
+        )}
+
+        {visiblePages.map(pageNumber => (
+          <button
+            key={pageNumber}
+            onClick={() => setCurrentPage(pageNumber)}
+            onMouseEnter={() => {
+              if (pageNumber !== currentPage) {
+                queryClient.prefetchQuery({
+                  queryKey: ['todos', search, pageNumber],
+                  queryFn: () =>
+                    fetch(`/api/todos?search=${encodeURIComponent(search)}&page=${pageNumber}&limit=40`)
+                      .then(res => res.json())
+                });
+              }
+            }}
+            className={`pagination-button ${pageNumber === currentPage ? 'active' : ''}`}
+            disabled={pageNumber === currentPage}
+          >
+            {pageNumber}
+          </button>
+        ))}
+
+        {currentPage < data.totalPages - 1 && (
+          <>
+            {currentPage < data.totalPages - 2 && <span className="pagination-ellipsis">...</span>}
+            <button
+              onClick={() => setCurrentPage(data.totalPages)}
+              className="pagination-button"
+            >
+              {data.totalPages}
+            </button>
+          </>
+        )}
 
         <button
           onClick={() => setCurrentPage(Math.min(data.totalPages, currentPage + 1))}
