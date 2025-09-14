@@ -75,7 +75,6 @@ export const useChangeTodoStatus = () => {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate all todos queries
       queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });

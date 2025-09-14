@@ -5,6 +5,7 @@ import { todoType } from "@/types/todoTypes"
 import { useMemo, useEffect } from "react"
 import { useTodos } from '@/hooks/useTodos'
 import { useQueryClient } from '@tanstack/react-query'
+import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 interface TodoContainerProps {
   search: string
@@ -26,7 +27,6 @@ export const TodoContainer = ({
   const queryClient = useQueryClient();
   const { data, isLoading } = useTodos(search, currentPage);
 
-  // Prefetch next page
   useEffect(() => {
     if (data?.totalPages && currentPage < data.totalPages) {
       queryClient.prefetchQuery({
@@ -42,13 +42,11 @@ export const TodoContainer = ({
     if (!data?.todos) return [];
 
     return [...data.todos].sort((a, b) => {
-      // First sort by completion status if sortType is 'incomplete'
       if (sortType === 'incomplete') {
         if (a.isCompleted !== b.isCompleted) {
           return a.isCompleted ? 1 : -1;
         }
       }
-      // Then sort by date (either as primary sort or as secondary sort)
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
   }, [data?.todos, sortType]);
@@ -97,7 +95,7 @@ export const TodoContainer = ({
           disabled={currentPage <= 1}
           className="pagination-button"
         >
-          Previous
+          <MdKeyboardDoubleArrowLeft />
         </button>
 
         {currentPage > 2 && (
@@ -151,7 +149,7 @@ export const TodoContainer = ({
           disabled={currentPage >= data.totalPages}
           className="pagination-button"
         >
-          Next
+          <MdKeyboardDoubleArrowRight />
         </button>
       </div>
     );
