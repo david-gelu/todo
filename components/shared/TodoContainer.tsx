@@ -94,6 +94,7 @@ export const TodoContainer = ({
           onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
           disabled={currentPage <= 1}
           className="pagination-button"
+          style={{ padding: 0 }}
         >
           <MdKeyboardDoubleArrowLeft />
         </button>
@@ -148,6 +149,7 @@ export const TodoContainer = ({
           onMouseEnter={prefetchNextPage}
           disabled={currentPage >= data.totalPages}
           className="pagination-button"
+          style={{ padding: 0 }}
         >
           <MdKeyboardDoubleArrowRight />
         </button>
