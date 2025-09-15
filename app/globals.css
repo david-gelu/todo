@@ -83,28 +83,26 @@ a {
 }
 
 .header-container {
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
   box-shadow: none;
   background: transparent;
 }
 
 .title-and-search {
   width: 100%;
-  display: grid;
+  margin-bottom: 0.5rem;
+}
+
+.title-and-theme {
+  display: flex;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: 1rem;
+  margin-bottom: 0.5rem;
 }
-
-.title-and-search h1 {
-  font-size: 2rem;
+.title-and-search h3 {
   font-weight: 700;
-  margin-bottom: 1rem;
 }
-
 .input {
-  width: 100%;
+  flex: 1;
   background: var(--color-input-bg);
   border: 1px solid var(--color-text);
   color: var(--color-text);
@@ -115,6 +113,7 @@ a {
 }
 
 button {
+  flex-shrink: 0;
   &.theme {
     border: 1px solid var(--color-text) !important;
     border-radius: 0.25rem;
@@ -134,9 +133,8 @@ button {
   }
 
   & > svg {
-    height: 2rem;
-    width: 2rem;
-    padding: 0.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
   }
 }
 
@@ -146,10 +144,9 @@ button {
   color: var(--color-text);
   border: none;
   border-radius: 0.5rem;
-  padding: 0.75rem 0;
+  padding: 0.75rem 0.5rem;
   font-size: 1.2rem;
   font-weight: 600;
-  width: 100%;
   transition: background 0.2s;
 }
 
@@ -168,9 +165,11 @@ button {
 }
 
 .add-todo {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  max-width: 100dvw;
 }
 
 *::-webkit-scrollbar-track {

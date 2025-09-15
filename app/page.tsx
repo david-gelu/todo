@@ -7,6 +7,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import ThemeColor from "@/components/shared/ThemeColor"
 import { useTodos } from '@/hooks/useTodos';
 import { TodoContainer } from "@/components/shared/TodoContainer"
+import Input from "@/components/ui/Input"
 
 function groupByDate(todos: todoType[] = []) {
   if (!todos?.length) return {};
@@ -99,34 +100,31 @@ const Home = () => {
     <main className={`${styles.main} main`}>
       <div className="header-container" ref={elementRef}>
         <div className="title-and-search">
-          <h1>Lista cumparaturi</h1>
-          <ThemeColor />
-        </div>
-        <AddToDo />
-        <div style={{ display: 'flex', width: '100%', gap: '1rem', alignItems: 'flex-end' }}>
-          <form style={{ margin: '0.5rem 0 0.5rem auto' }} >
+          <div className="title-and-theme">
+            <h3>Lista cumparaturi</h3>
+            <ThemeColor />
+          </div>
+          <form style={{ display: 'flex', width: '100%', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <label htmlFor="sort">Sortare dupa: </label>
             <select
               name='sort'
               className="input"
-              style={{ width: 'auto', minWidth: 120 }}
               value={sortType}
               onChange={e => setSortType(e.target.value as 'date' | 'incomplete')}
             >
               <option value="date">Data</option>
               <option value="incomplete">Incomplete</option>
             </select>
+            <Input
+              name="search"
+              className="input"
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cauta"
+            />
           </form>
-          <input
-            name="search"
-            className="input"
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cauta dupa nume"
-            style={{ margin: '0.5rem 0 0.5rem auto' }}
-          />
         </div>
+        <AddToDo />
       </div>
-
       <TodoContainer
         search={search}
         sortType={sortType}

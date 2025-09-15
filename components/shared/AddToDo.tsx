@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 import { useAddTodo } from '@/hooks/useTodos'
 import Form from '../ui/Form'
 import Button from '../ui/Button'
@@ -15,15 +14,12 @@ const AddToDo = () => {
 
 	const handleCreateToDo = async (formData: FormData) => {
 		try {
-			if (!inputValue.trim()) {
-				return
-			}
+			if (!inputValue.trim()) return
 
 			await addTodoMutation.mutateAsync(formData)
 
 			setInputValue('')
 			formRef.current?.reset()
-			inputRef.current?.focus()
 		} catch (error) {
 			console.error('Failed to create ToDo:', error)
 		}

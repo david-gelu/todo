@@ -35,12 +35,7 @@ const ThemeColor = () => {
       className='ms-auto theme'
       style={{ border: '1px solid var(--color-text)' }}
       onClick={() => toggleTheme()}
-      text={
-        <>
-          <span className="todo-icon">Thema</span>
-          {theme ? <FaMoon className="todo-icon" /> : <FaSun className="todo-icon" />}
-        </>
-      }
+      text={theme ? <FaMoon className="todo-icon" /> : <FaSun className="todo-icon" />}
     />
   )
 }
